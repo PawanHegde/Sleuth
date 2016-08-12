@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2016. Pawan Hegde
+  -->
+
+<!--TODO:Create a detailed view to show a result-->
+<com.storykaar.sleuth.ui.views.ExpandableCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rshow_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:elevation="2dp"
+    app:cardCornerRadius="@dimen/cardview_default_radius"
+    android:clickable="true">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.percent.PercentRelativeLayout
+            android:id="@+id/rshow_image_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="100dp">
+            <ImageView
+                android:id="@+id/rshow_poster"
+                android:layout_width="match_parent"
+                app:layout_widthPercent="100%"
+                app:layout_aspectRatio="178%"
+                android:scaleType="centerCrop" />
+            <TextView
+                android:id="@+id/rshow_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/rshow_poster"
+                android:background="#d5212121"
+                android:gravity="center_vertical"
+                android:padding="8dp"
+                android:text="Title"
+                android:textIsSelectable="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+        </android.support.percent.PercentRelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/rshow_image_holder"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:orientation="vertical">
+            <com.storykaar.sleuth.ui.views.LabeledTextView
+                android:id="@+id/rshow_plot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:layout_below="@id/rshow_image_holder"
+                android:paddingTop="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            <com.storykaar.sleuth.ui.views.LabeledTextView
+                android:id="@+id/rshow_rated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+            <com.storykaar.sleuth.ui.views.LabeledTextView
+                android:id="@+id/rshow_genre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/rshow_rated"
+                android:visibility="gone"/>
+            <com.storykaar.sleuth.ui.views.LabeledTextView
+                android:id="@+id/rshow_actors"
+                app:label="Actor(s)"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rshow_plot"
+                android:visibility="gone"/>
+            <com.storykaar.sleuth.ui.views.LabeledTextView
+                android:id="@+id/rshow_directors"
+                app:label="Director(s)"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rshow_actors" />
+            <com.storykaar.sleuth.ui.views.LabeledTextView
+                android:id="@+id/rshow_country"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rshow_rated"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/rshow_visit_source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rshow_country"
+                android:layout_gravity="bottom|end"
+                android:layout_alignParentEnd="true"
+                style="?android:attr/buttonBarButtonStyle"
+                android:text="@string/visit_source" />
+        </LinearLayout>
+    </RelativeLayout>
+</com.storykaar.sleuth.ui.views.ExpandableCardView>

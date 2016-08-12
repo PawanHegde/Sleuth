@@ -1,0 +1,48 @@
+<!--
+  ~ Copyright (c) 2016. Pawan Hegde
+  -->
+
+<resources>
+    <string name="app_name">Sleuth</string>
+    <string name="title_activity_sleuth">Sleuth</string>
+    <string name="navigation_item_about">About</string>
+    <string name="navigation_item_preferences">Preferences</string>
+
+    <string name="close_drawer">Close Drawer</string>
+    <string name="open_drawer">Close Drawer</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+    <string name="undoDeleteCuriosity">Undo Delete</string>
+    <string name="undo">Undo</string>
+    <string name="visit_source">Visit Source</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Example settings for Data Use -->
+    <string name="pref_header_data_use">Data Use</string>
+
+    <string name="pref_title_data_use">Preferred Network</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>Wifi Only</item>
+        <item>Balanced</item>
+        <item>Any Network</item>
+    </string-array>
+    <string-array name="pref_data_use">
+        <item>wifi</item>
+        <item>balanced</item>
+        <item>any</item>
+    </string-array>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_results_notifications">Download completed notification</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="curiosity_list_empty">No cases to investigate</string>
+    <string name="no_results_found">We have failed you... :(</string>
+    <string name="still_trying">investigating...</string>
+    <string name="fin">fin</string>
+</resources>

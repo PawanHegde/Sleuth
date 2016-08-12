@@ -1,0 +1,16 @@
+<!--
+  ~ Copyright (c) 2016. Pawan Hegde
+  -->
+
+<vector android:height="240dp" android:viewportHeight="744.09"
+    android:viewportWidth="744.09" android:width="240dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#d45500" android:pathData="M362.9,316.1h0v397.2h-0z"/>
+    <path android:fillColor="#000000" android:pathData="m617.8,236a255.6,203.9 0,1 0,-511.2 0"/>
+    <path android:fillColor="#d45500" android:pathData="m562,673.8c-11.5,-7 -21.4,-24.1 -47.1,-81.3l-10.6,-23.5 -43.7,0.3c-50.5,0.3 -52.5,-0.2 -84.5,-20.1 -25.2,-15.8 -23.7,-13.2 -20.9,-35.6 1.3,-10.5 3.1,-20.3 4,-21.8 2.1,-3.4 36.1,-2.9 72.7,1.1 83.9,9.2 125.3,27.4 137.2,60.6 9.2,25.8 10.7,29.3 15,35.7 14.4,21.4 33.5,20.3 60,-3.7 4.4,-4 8,-6.6 8,-5.9 0,3.8 -41.7,68.4 -54,83.6 -11.8,14.6 -23.9,18.2 -36.2,10.7z"/>
+    <path android:fillColor="#d45500" android:pathData="m161.3,673.8c11.5,-7 21.4,-24.1 47.1,-81.3l10.6,-23.5 43.7,0.3c50.5,0.3 52.5,-0.2 84.5,-20.1 25.2,-15.8 23.7,-13.2 20.9,-35.6 -1.3,-10.5 -3.1,-20.3 -4,-21.8 -2.1,-3.4 -36.1,-2.9 -72.7,1.1 -83.9,9.2 -125.3,27.4 -137.2,60.6 -9.2,25.8 -10.7,29.3 -15,35.7 -14.4,21.4 -33.5,20.3 -60,-3.7 -4.4,-4 -8,-6.6 -8,-5.9 0,3.8 41.7,68.4 54,83.6 11.8,14.6 23.9,18.2 36.2,10.7z"/>
+    <path android:fillColor="#FF000000" android:pathData="m361.5,316.8a126.5,126.5 0,1 1,-253 -0"/>
+    <path android:fillColor="#FF000000" android:pathData="m614.6,316.8a126.5,126.5 66.5,1 1,-253 -0"/>
+    <path android:fillColor="#000000" android:pathData="M0,256.4h744.1v24h-744.1z"/>
+    <path android:fillColor="#FF000000" android:pathData="M108.5,311.5h506.1v12.6h-506.1z"/>
+    <path android:fillColor="#000000" android:pathData=""/>
+</vector>

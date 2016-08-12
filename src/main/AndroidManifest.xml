@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016. Pawan Hegde
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.storykaar.sleuth">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:name=".SleuthApp"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_scheme"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <service
+            android:name=".services.JobService"
+            android:exported="true"
+            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
+            <intent-filter>
+                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".ui.activities.SplashActivity"
+            android:theme="@style/SplashTheme">
+        </activity>
+        <activity
+            android:name=".ui.activities.SleuthActivity"
+            android:label="@string/title_activity_sleuth">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.activities.ResultActivity">
+            <intent-filter>
+                <action android:name="com.storykaar.sleuth.ui.activities.ResultActivity" />
+                />
+            </intent-filter>
+        </activity>
+
+        <!-- Implement the input activity for widget -->
+        <activity android:name=".ui.activities.InputActivity" />
+        <activity
+            android:name=".ui.activities.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".ui.activities.SleuthActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.storykaar.sleuth.ui.activities.SleuthActivity" />
+        </activity>
+        <activity android:name=".ui.activities.AboutActivity"></activity>
+    </application>
+
+</manifest>

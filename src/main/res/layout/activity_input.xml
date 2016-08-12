@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016. Pawan Hegde
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/actionBarInputActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"/>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/query_box2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginBottom="30dp"
+            android:singleLine="true"/>
+        <!--<com.thefinestartist.movingbutton.MovingButton-->
+            <!--android:id="@+id/search_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="30dp"-->
+            <!--android:layout_weight="0"-->
+            <!--android:text="@android:string/search_go"-->
+
+            <!--app:mb_move_direction="vertical"-->
+            <!--app:mb_event_volume="2"-->
+            <!--app:mb_vibration_duration="10"-->
+            <!--app:mb_movement="30dp" />-->
+    </LinearLayout>
+</LinearLayout>

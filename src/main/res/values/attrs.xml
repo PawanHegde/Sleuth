@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016. Pawan Hegde
+  -->
+
+<resources>
+    <declare-styleable name="LabeledTextView">
+        <attr name="label" format="string" localization="suggested" />
+        <attr name="value" format="string" />
+    </declare-styleable>
+</resources>

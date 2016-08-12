@@ -1,0 +1,31 @@
+<!--
+  ~ Copyright (c) 2016. Pawan Hegde
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="600dp"
+        android:height="600dp"
+        android:viewportWidth="600.0"
+        android:viewportHeight="600.0">
+    <path
+        android:pathData="m599.5,300a299.5,299.5 0,1 1,-599.1 0,299.5 299.5,0 1,1 599.1,0z"
+        android:fillAlpha="1"
+        android:strokeColor="#000000"
+        android:fillColor="#9e9e9e"
+        android:strokeWidth="1"
+        android:strokeAlpha="0"/>
+    <path
+        android:pathData="m124.2,237.1 l357.3,0c-8.9,77 -15.7,130.8 -15.1,192.5l-342.2,0z"
+        android:fillAlpha="1"
+        android:strokeColor="#000000"
+        android:fillColor="#616161"
+        android:strokeWidth="0.53463632"
+        android:strokeAlpha="0"/>
+    <path
+        android:pathData="m60.7,258 l367.2,-0.8c17,54.1 32.4,109.5 38.4,172.4l-342.2,0C114,361.3 85.6,311.4 60.7,258z"
+        android:fillAlpha="1"
+        android:strokeColor="#000000"
+        android:fillColor="#e0e0e0"
+        android:strokeWidth="0.53463632"
+        android:strokeAlpha="0"/>
+</vector>

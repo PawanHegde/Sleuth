@@ -1,0 +1,48 @@
+<!--
+  ~ Copyright (c) 2016. Pawan Hegde
+  -->
+
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/curiosity_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:src="@drawable/empty_folder"
+            android:id="@+id/no_curiosities_image"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:visibility="gone"
+            android:text="@string/curiosity_list_empty"
+            android:id="@+id/no_curiosites_text" />
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_curiosity_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add_white_24dp"
+        app:layout_anchor="@id/curiosity_list_view"
+        app:layout_anchorGravity="bottom|end"/>
+</android.support.design.widget.CoordinatorLayout>

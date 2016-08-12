@@ -1,0 +1,21 @@
+<!--
+  ~ Copyright (c) 2016. Pawan Hegde
+  -->
+
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <item name="android:windowActionBar">false</item>
+    </style>
+    
+    <style name="SplashTheme" parent="Theme.AppCompat">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">false</item>
+        <item name="color">@color/dark_gray</item>
+    </style>
+</resources>
