@@ -4,7 +4,6 @@
 
 package com.storykaar.sleuth.services;
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import com.storykaar.sleuth.events.ResultsFetchedMessage;
@@ -32,19 +31,6 @@ public class ResultStore {
     private static ResultStore instance;
     private final HashMap<Curiosity, TreeSet<ResultGroup>> resultMap = new HashMap<>();
     private final HashMap<Curiosity, Set<Source>> requestedSourcesMap = new HashMap<>();
-    private final Set<Curiosity> undoableCuriosities = new HashSet<>(1);
-
-    private static final Integer DELETE_LEEWAY = 3000;
-    private Handler deleteHandler = new Handler();
-    private Runnable deleteTask = new Runnable() {
-        @Override
-        public void run() {
-            for (Curiosity curiosity: undoableCuriosities) {
-                //DownloadManager.cancel(curiosity);
-                StorageController.requestDeletion(curiosity);
-            }
-        }
-    };
 
     private ResultStore() {
         EventBus.getDefault().register(this);
@@ -171,16 +157,12 @@ public class ResultStore {
     public void deleteResultsFor(final Curiosity curiosity) {
         Timber.d("Delete requested for %s", curiosity);
 
+        // Stop any pending downloads
+        DownloadManager.cancel(curiosity);
+        // Download existing results
+        StorageController.requestDeletion(curiosity);
+        // Remove the results from cache
         resultMap.remove(curiosity);
-
-//        undoableCuriosities.add(curiosity);
-//        // TODO: Delete if app closes before the deletions take place
-//        deleteHandler.removeCallbacks(deleteTask);
-//        deleteHandler.postDelayed(deleteTask, DELETE_LEEWAY);
-    }
-
-    public void undoDeletions() {
-        deleteHandler.removeCallbacks(deleteTask);
     }
 
     public void vacuum() {

@@ -7,7 +7,6 @@ package com.storykaar.sleuth.services.storage;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.storykaar.sleuth.events.CuriositiesFetchedMessage;
 import com.storykaar.sleuth.events.ImageFetchedMessage;
@@ -26,10 +25,11 @@ import timber.log.Timber;
 
 /**
  * Created by pawan on 24/4/16.
+ *
+ * Generic controller to handle storage
  */
 public class StorageController {
     public static String CURIOSITIES_FILE = "curiosities.txt";
-//    public static String STATUS_FILE = "status.txt";
     public static String SOURCES_FILE = "sources.txt";
 
     private static FileStorage storage = new FileStorage();
@@ -99,7 +99,7 @@ public class StorageController {
         });
     }
 
-    public static void requestStorage(final @NonNull Curiosity curiosity, @Nullable final ResultGroup resultGroup) {
+    public static void requestStorage(final @NonNull Curiosity curiosity, @NonNull final ResultGroup resultGroup) {
         Timber.i("Requesting storage for curiositiy: " + curiosity);
         AsyncTask.execute(new Runnable() {
             @Override
@@ -166,6 +166,34 @@ public class StorageController {
             @Override
             public void run() {
                 storage.vacuum();
+            }
+        });
+    }
+
+    public static void setStatus(@NonNull final Curiosity curiosity, @NonNull final Integer status) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<Curiosity, Integer> curiosityIntegerMap = storage.requestCuriosities(CURIOSITIES_FILE);
+                if (curiosityIntegerMap.containsKey(curiosity)) {
+                    Integer currentStatus = curiosityIntegerMap.get(curiosity);
+                    curiosityIntegerMap.put(curiosity, currentStatus | status);
+                    saveCuriosities(curiosityIntegerMap);
+                }
+            }
+        });
+    }
+
+    public static void unsetStatus(@NonNull final Curiosity curiosity, @NonNull final Integer status) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<Curiosity, Integer> curiosityIntegerMap = storage.requestCuriosities(CURIOSITIES_FILE);
+                if (curiosityIntegerMap.containsKey(curiosity)) {
+                    Integer currentStatus = curiosityIntegerMap.get(curiosity);
+                    curiosityIntegerMap.put(curiosity, currentStatus & ~status);
+                    saveCuriosities(curiosityIntegerMap);
+                }
             }
         });
     }

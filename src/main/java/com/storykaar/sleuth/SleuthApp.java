@@ -6,12 +6,18 @@ package com.storykaar.sleuth;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.config.Configuration;
+import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
 import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.storykaar.sleuth.services.JobSchedulerService;
 import com.storykaar.sleuth.services.JobService;
+import com.storykaar.sleuth.services.ResultStore;
 import com.storykaar.sleuth.services.downloaders.DownloadManager;
 
 import timber.log.Timber;
@@ -40,39 +46,32 @@ public class SleuthApp extends Application {
         }
 
         System.out.println("APPCREATEFINISHED");
+
+        ResultStore.getResultStore().vacuum();
+        SleuthApp.configureJobManager(instance);
     }
 
     private static void configureJobManager(@NonNull Context context) {
-        Configuration configuration = new Configuration.Builder(context)
-                /*.customLogger(new CustomLogger() {
-                    private static final String TAG = "JOBS";
-                    @Override
-                    public boolean isDebugEnabled() {
-                        return false;
-                    }
-
-                    @Override
-                    public void d(String text, Object... args) {
-                        Log.d(TAG, String.format(text, args));
-                    }
-
-                    @Override
-                    public void e(Throwable t, String text, Object... args) {
-                        Log.e(TAG, String.format(text, args), t);
-                    }
-
-                    @Override
-                    public void e(String text, Object... args) {
-                        Log.e(TAG, String.format(text, args));
-                    }
-                })*/
+        Configuration.Builder builder = new Configuration.Builder(context)
                 .scheduler(GcmJobSchedulerService.createSchedulerFor(context, JobService.class), false)
                 .minConsumerCount(1)//always keep at least one consumer alive
                 .maxConsumerCount(3)//up to 3 consumers at a time
                 .loadFactor(1)//3 jobs per consumer
-                .consumerKeepAlive(120)//wait 2 minute
-                .build();
-        jobManager = new JobManager(configuration);
+                .consumerKeepAlive(120);//wait 2 minute
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.scheduler(FrameworkJobSchedulerService.createSchedulerFor(instance,
+                    JobSchedulerService.class), true);
+        } else {
+            int enableGcm = GoogleApiAvailability.getInstance().
+                    isGooglePlayServicesAvailable(instance);
+            if (enableGcm == ConnectionResult.SUCCESS) {
+                builder.scheduler(GcmJobSchedulerService.createSchedulerFor(instance,
+                        JobService.class), true);
+            }
+        }
+
+        jobManager = new JobManager(builder.build());
 
         jobManager.addCallback(new DownloadManager.CallBackHandler());
     }

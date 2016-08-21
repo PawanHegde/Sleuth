@@ -4,10 +4,6 @@
 
 package com.storykaar.sleuth.services;
 
-/**
- * Created by pawan on 6/7/16.
- */
-
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
@@ -19,6 +15,8 @@ import java.util.TimerTask;
 import timber.log.Timber;
 
 /**
+ * Created by pawan on 6/7/16.
+ *
  * A bag to hold items for at least a specified time
  * The bag is purged after this time is complete
  * Time is reset after any new addition
@@ -27,11 +25,11 @@ import timber.log.Timber;
  */
 public class PurgeableBag<T> {
     final Integer retainTime;
-    final Runnable exitTask;
+    final ExitTask exitTask;
     final Set<T> bag = new HashSet<>(1);
     Timer timer = new Timer();
 
-    PurgeableBag(@NonNull Integer retainTime, Runnable exitTask) {
+    PurgeableBag(@NonNull Integer retainTime, PurgeableBag.ExitTask exitTask) {
         this.retainTime = retainTime;
         this.exitTask = exitTask;
     }
@@ -50,8 +48,13 @@ public class PurgeableBag<T> {
             @Override
             public void run() {
                 Timber.d("PurgeableBag purged of %s", bag);
+
+                for (T t: bag) {
+                    exitTask.item = t;
+                    AsyncTask.execute(exitTask);
+                }
+
                 bag.clear();
-                AsyncTask.execute(exitTask);
             }
         }, retainTime);
     }
@@ -87,5 +90,9 @@ public class PurgeableBag<T> {
         bag.clear();
 
         return transportBag;
+    }
+
+    public static abstract class ExitTask<T> implements Runnable {
+        public T item;
     }
 }

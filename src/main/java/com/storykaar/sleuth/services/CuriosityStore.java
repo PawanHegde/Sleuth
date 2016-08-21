@@ -31,11 +31,13 @@ public class CuriosityStore {
     private static CuriosityStore instance = new CuriosityStore();
 
     private final HashMap<Curiosity, Integer> curiosities = new HashMap<>();
-    private final PurgeableBag<Map<Curiosity, Integer>> undoableCuriosities = new PurgeableBag<>(3000, new Runnable() {
+    private final PurgeableBag<Map<Curiosity, Integer>> undoableCuriosities = new PurgeableBag<>(3000, new PurgeableBag.ExitTask<Map<Curiosity, Integer>>() {
         @Override
         public void run() {
             // TODO: Formulate a general way to stop any pending downloads and delete results
-            ResultStore.getResultStore().vacuum();
+            for (Curiosity curiosity: item.keySet()) {
+                ResultStore.getResultStore().deleteResultsFor(curiosity);
+            }
         }
     });
 
@@ -82,56 +84,57 @@ public class CuriosityStore {
         HashMap<Curiosity, Integer> undoableCuriosity = new HashMap<>(1);
         undoableCuriosity.put(curiosity, curiosities.get(curiosity));
         curiosities.remove(curiosity);
-        ResultStore.getResultStore().deleteResultsFor(curiosity);
         StorageController.saveCuriosities(curiosities);
 
-        // TODO: Prevent results from getting deleted if the curiosity has been undeleted
-        //ResultStore.getResultStore().deleteResultsFor(curiosity);
         // Deleted curiosity only exists in memory now
         // If the app is closed/crashes, we lose the ability to undo
         undoableCuriosities.dropItem(undoableCuriosity);
     }
 
     public void markUnread(@NonNull Curiosity curiosity) {
+        Integer setBits =
+                Constants.STATUS_HAS_RESULTS |
+                Constants.STATUS_HAS_UNREAD_RESULTS;
+
+        Timber.d("Marking [%s] as unread", curiosity);
+        StorageController.setStatus(curiosity, setBits);
+
         if (curiosities.containsKey(curiosity)) {
-            Integer status = curiosities.get(curiosity)
-                    | Constants.STATUS_HAS_RESULTS
-                    | Constants.STATUS_HAS_UNREAD_RESULTS;
-
-            curiosities.put(curiosity, status);
-
-//            StorageController.setStatus(curiosity, status);
-            StorageController.saveCuriosities(curiosities);
-            EventBus.getDefault().post(new CuriosityChangedMessage(curiosity, status));
+            Integer updatedStatus = curiosities.get(curiosity) | setBits;
+            curiosities.put(curiosity, updatedStatus);
+            EventBus.getDefault().post(new CuriosityChangedMessage(curiosity, updatedStatus));
         }
     }
 
     public void markRead(@NonNull Curiosity curiosity) {
-        if (curiosities.containsKey(curiosity)) {
-            Integer status = curiosities.get(curiosity) & ~Constants.STATUS_HAS_UNREAD_RESULTS;
-            curiosities.put(curiosity, status);
+        Integer unsetBits = Constants.STATUS_HAS_UNREAD_RESULTS;
 
-//            StorageController.setStatus(curiosity, status);
-            StorageController.saveCuriosities(curiosities);
-            EventBus.getDefault().post(new CuriosityChangedMessage(curiosity, status));
+        Timber.d("Marking [%s] as read", curiosity);
+        StorageController.unsetStatus(curiosity, unsetBits);
+
+
+        if (curiosities.containsKey(curiosity)) {
+            Integer updatedStatus = curiosities.get(curiosity) & ~unsetBits;
+            curiosities.put(curiosity, updatedStatus);
+            EventBus.getDefault().post(new CuriosityChangedMessage(curiosity, updatedStatus));
         }
     }
 
     public void markQueryingFinished(@NonNull Curiosity curiosity) {
-        if (curiosities.containsKey(curiosity)) {
-            Integer status = curiosities.get(curiosity) | Constants.STATUS_QUERYING_FINISHED;
-            curiosities.put(curiosity, status);
+        Integer setBits = Constants.STATUS_QUERYING_FINISHED;
 
-//            StorageController.setStatus(curiosity, status);
-            StorageController.saveCuriosities(curiosities);
-            EventBus.getDefault().post(new CuriosityChangedMessage(curiosity, status));
+        Timber.d("Marking [%s] as unread", curiosity);
+        StorageController.setStatus(curiosity, setBits);
+
+        if (curiosities.containsKey(curiosity)) {
+            Integer updatedStatus = curiosities.get(curiosity) | setBits;
+            curiosities.put(curiosity, updatedStatus);
+            EventBus.getDefault().post(new CuriosityChangedMessage(curiosity, updatedStatus));
         }
     }
 
     public void undoDeletions() {
         Set<Map<Curiosity, Integer>> savedCuriosities = undoableCuriosities.retrieveItems();
-
-        ResultStore.getResultStore().undoDeletions();
 
         Timber.d("Heroically Rescued Curiosities: %s", savedCuriosities);
         for (Map<Curiosity, Integer> curiosityIntegerMap: savedCuriosities) {
