@@ -23,6 +23,8 @@ import timber.log.Timber;
 
 /**
  * Created by pawan on 6/7/16.
+ *
+ * Downloader for Imdb (via Omdb) data
  */
 public class OmdbDownloader implements DownloaderFactory.IDownloader {
 
@@ -32,7 +34,7 @@ public class OmdbDownloader implements DownloaderFactory.IDownloader {
     public ResultGroup download(Curiosity curiosity) throws IOException {
         OmdbObject omdbObject;
         try {
-            omdbObject = omdbApi.fetch(curiosity.query, "json").execute().body();
+            omdbObject = omdbApi.fetch(curiosity.query, "json", "full").execute().body();
         } catch (IOException e) {
             throw e;
         }
@@ -88,7 +90,7 @@ public class OmdbDownloader implements DownloaderFactory.IDownloader {
 
     interface OmdbApi {
         @GET("/")
-        Call<OmdbObject> fetch(@Query("t") String title, @Query("r") String format);
+        Call<OmdbObject> fetch(@Query("t") String title, @Query("r") String format, @Query("plot") String plot);
     }
 
     public class OmdbObject {
