@@ -1,95 +1,23 @@
-/*
- * Copyright (c) 2016. Pawan Hegde
- */
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.android.tools.build:gradle:2.1.3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
 }
 
-plugins {
-    id "com.github.rsavin.gradle.microwave" version "1.0.0"
-}
-
-apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
-
-android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.0'
-    defaultConfig {
-        applicationId "com.storykaar.sleuth"
-        minSdkVersion 19
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
-        //multiDexEnabled true
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
-    productFlavors {
-    }
-
-    dexOptions {
-        incremental false
-        javaMaxHeapSize "4g"
+allprojects {
+    repositories {
+        jcenter()
     }
 }
 
-repositories {
-    maven {
-        url 'https://oss.jfrog.org/libs-snapshot'
-    }
-
-    maven {
-        url "https://jitpack.io"
-    }
-}
-
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    //androidTestCompile 'junit:junit:4.12'
-    //testCompile 'org.mockito:mockito-core:1.10.19'
-    //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
-    //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
-    //    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
-    //compile 'com.github.amlcurran.showcaseview:library:5.4.1'
-    //compile 'com.github.hotchemi:permissionsdispatcher:2.1.2'
-    //apt 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
-    apt 'com.jakewharton:butterknife-compiler:8.1.0'
-    compile('com.squareup.retrofit2:converter-simplexml:2.1.0') {
-        exclude module: 'stax-api'
-        exclude module: 'stax'
-        exclude module: 'xpp3'
-    }
-    //compile group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.1.0'
-    //compile 'com.android.support:multidex:1.0.1'
-    compile 'com.jakewharton:butterknife:8.1.0'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
-    compile 'com.android.support:cardview-v7:24.0.0'
-    compile 'com.github.nisrulz:recyclerviewhelper:23.4.0'
-    compile 'com.thefinestartist:movingbutton:1.0.0'
-    compile 'com.android.support:design:24.0.0'
-    compile 'com.android.support:percent:24.0.0'
-    compile 'com.jakewharton.timber:timber:3.1.0'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.birbit:android-priority-jobqueue:2.0.0-alpha2'
-    compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.google.android.gms:play-services-gcm:9.2.1'
-    compile 'com.android.support:support-v4:24.0.0'
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
