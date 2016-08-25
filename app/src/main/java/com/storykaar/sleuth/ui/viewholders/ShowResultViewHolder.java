@@ -59,13 +59,13 @@ public class ShowResultViewHolder
 
     @Override
     public void setResult(final Result result) {
-        titleView.setText(result.propertyMap.get("Title"));
-        plotView.setValue(result.propertyMap.get("Plot"));
-        actorsView.setValue(result.propertyMap.get("Actors"));
-        directorsView.setValue(result.propertyMap.get("Director"));
-        ratedView.setValue(result.propertyMap.get("Rated"));
-        genreView.setValue(result.propertyMap.get("Genre"));
-        countryView.setValue(result.propertyMap.get("Country"));
+        titleView.setText(String.valueOf(result.propertyMap.get("Title")));
+        plotView.setValue(String.valueOf(result.propertyMap.get("Plot")));
+        actorsView.setValue(String.valueOf(result.propertyMap.get("Actors")));
+        directorsView.setValue(String.valueOf(result.propertyMap.get("Director")));
+        ratedView.setValue(String.valueOf(result.propertyMap.get("Rated")));
+        genreView.setValue(String.valueOf(result.propertyMap.get("Genre")));
+        countryView.setValue(String.valueOf(result.propertyMap.get("Country")));
 
         if (result.image != null) {
 //            float finalWidth = imageView.getWidth();
@@ -101,7 +101,7 @@ public class ShowResultViewHolder
 
     @Override
     protected String getTextRepresentation(final Result result) {
-        HashMap<String, String> properties = result.propertyMap;
+        HashMap<String, Object> properties = result.propertyMap;
         StringBuilder builder = new StringBuilder();
 
         builder.append(properties.get("Language"));

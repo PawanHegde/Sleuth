@@ -50,7 +50,7 @@ public class WordnickDownloader
         }
 
         for (WordnikDefinition definition : definitions) {
-            HashMap<String, String> propertiesMap = new HashMap<>();
+            HashMap<String, Object> propertiesMap = new HashMap<>();
 
             propertiesMap.put("Part of Speech", definition.partOfSpeech);
             propertiesMap.put("Source", definition.sourceDictionary);

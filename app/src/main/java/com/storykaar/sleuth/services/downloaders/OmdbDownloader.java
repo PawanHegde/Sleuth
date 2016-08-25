@@ -48,7 +48,7 @@ public class OmdbDownloader implements DownloaderFactory.IDownloader {
             ImageStore.getInstance().storeImage(omdbObject.Poster);
         }
 
-        HashMap<String, String> propertiesMap = new HashMap<>();
+        HashMap<String, Object> propertiesMap = new HashMap<>();
 
         propertiesMap.put("Title", getInvalidAsNull(omdbObject.Title));
         propertiesMap.put("Year", getInvalidAsNull(omdbObject.Year));

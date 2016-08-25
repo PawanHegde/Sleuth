@@ -86,7 +86,7 @@ public class DuckDuckGoDownloader
 
             Timber.d("Object Type: %s", duckObject.Type);
             if ("A".equals(duckObject.Type)) {
-                HashMap<String, String> propertyMap = new HashMap<>();
+                HashMap<String, Object> propertyMap = new HashMap<>();
 
                 propertyMap.put("Heading", duckObject.Heading);
                 propertyMap.put("Entity", duckObject.Entity);
@@ -123,7 +123,7 @@ public class DuckDuckGoDownloader
 
             Timber.d("Related queries %s", duckObject.RelatedTopics);
             for (RelatedTopic relatedTopic : duckObject.RelatedTopics) {
-                HashMap<String, String> propertyMap = new HashMap<>();
+                HashMap<String, Object> propertyMap = new HashMap<>();
                 com.storykaar.sleuth.model.Result result;
 
                 if (relatedTopic.Name != null && relatedTopic.Topics != null) {

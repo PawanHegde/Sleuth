@@ -21,11 +21,11 @@ public class Result implements Serializable, Comparable<Result> {
     public static final int RELATED_TOPIC = 5;
 
     public final String image;
-    public final HashMap<String, String> propertyMap;
+    public final HashMap<String, Object> propertyMap;
     public final Integer quality;
     public final Integer type;
 
-    public Result(HashMap<String, String> propertyMap,
+    public Result(HashMap<String, Object> propertyMap,
                   Integer quality,
                   Integer type,
                   String image) {
@@ -35,7 +35,7 @@ public class Result implements Serializable, Comparable<Result> {
         this.image = image;
     }
 
-    public Result(final HashMap<String, String> propertyMap,
+    public Result(final HashMap<String, Object> propertyMap,
                   final Integer quality, final Integer type) {
         this(propertyMap, quality, type, null);
     }
