@@ -45,7 +45,7 @@ public class ResultViewHolder
         }
     }
 
-    protected String getTextRepresentation(final Result result) {
+    private String getTextRepresentation(final Result result) {
         HashMap<String, Object> properties = result.propertyMap;
         StringBuilder textBuilder = new StringBuilder();
 

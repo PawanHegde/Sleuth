@@ -18,6 +18,7 @@ import com.storykaar.sleuth.model.Result;
 import com.storykaar.sleuth.model.ResultGroup;
 import com.storykaar.sleuth.services.CuriosityStore;
 import com.storykaar.sleuth.services.ResultStore;
+import com.storykaar.sleuth.ui.DictionaryResultViewHolder;
 import com.storykaar.sleuth.ui.viewholders.ResultViewHolder;
 import com.storykaar.sleuth.ui.viewholders.ShowResultViewHolder;
 import com.storykaar.sleuth.ui.viewholders.StatusViewHolder;
@@ -73,6 +74,11 @@ public class ResultAdapter
             case Result.SHOW:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_result_show, parent, false);
                 viewHolder = new ShowResultViewHolder(view);
+                break;
+
+            case Result.DICTIONARY:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_result_dictionary, parent, false);
+                viewHolder = new DictionaryResultViewHolder(view);
                 break;
 
             default:

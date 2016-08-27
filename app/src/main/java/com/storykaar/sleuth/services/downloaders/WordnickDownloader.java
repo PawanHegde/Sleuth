@@ -4,6 +4,7 @@
 
 package com.storykaar.sleuth.services.downloaders;
 
+import com.storykaar.sleuth.Constants;
 import com.storykaar.sleuth.model.Curiosity;
 import com.storykaar.sleuth.model.Result;
 import com.storykaar.sleuth.model.ResultGroup;
@@ -11,6 +12,7 @@ import com.storykaar.sleuth.model.sources.Source;
 import com.storykaar.sleuth.util.ServiceGenerator;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,16 +25,11 @@ import timber.log.Timber;
 
 /**
  * Created by pawan on 4/7/16.
+ *
+ * Download definitions from Wordnick
  */
 public class WordnickDownloader
         implements DownloaderFactory.IDownloader {
-
-    public interface WordnickAPI {
-        //http://api.wordnik.com:80/v4/word.json/monster/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5
-        //http://developer.wordnik.com/word.json/monster/definitions?limit=200&includeRelated=true&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5
-        @GET("v4/word.json/{word}/definitions")
-        Call<List<WordnikDefinition>> fetchDefinition(@Path("word") String word, @Query("api_key") String apiKey, @Query("limit") int limit, @Query("includeRelated") Boolean includeRelated, @Query("includeTags") Boolean includeTags);
-    }
 
     @Override
     public ResultGroup download(Curiosity curiosity) throws IOException {
@@ -43,25 +40,41 @@ public class WordnickDownloader
 
         List<WordnikDefinition> definitions;
         try {
+            Timber.d("Requesting URL: %s", wordnick.fetchDefinition(curiosity.query, "a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5", 200, true, true).request().url());
             definitions = wordnick.fetchDefinition(curiosity.query, "a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5", 200, true, true).execute().body();
         } catch (Exception e) {
             Timber.e(e, "Failed to fetch a result from WordNick");
             throw e;
         }
 
-        for (WordnikDefinition definition : definitions) {
+        if (definitions.size() > 0) {
             HashMap<String, Object> propertiesMap = new HashMap<>();
 
-            propertiesMap.put("Part of Speech", definition.partOfSpeech);
-            propertiesMap.put("Source", definition.sourceDictionary);
-            propertiesMap.put("Meaning", definition.text);
+            String sourceDictionary = definitions.get(0).sourceDictionary;
+            String word = definitions.get(0).word;
+            propertiesMap.put(Constants.WORDNIK_S0URCE, sourceDictionary);
+            propertiesMap.put(Constants.WORDNIK_WORD, word);
+
+            for (WordnikDefinition definition : definitions) {
+                if (!propertiesMap.containsKey(definition.partOfSpeech)) {
+                    propertiesMap.put(definition.partOfSpeech, new ArrayList<String>());
+                }
+
+                ((ArrayList<String>) propertiesMap.get(definition.partOfSpeech)).add(definition.text);
+            }
 
             Result result = new Result(propertiesMap, 1000, Result.DICTIONARY);
-
             results.add(result);
         }
 
         return new ResultGroup(curiosity, Source.wordnick, results);
+    }
+
+    public interface WordnickAPI {
+        //http://api.wordnik.com:80/v4/word.json/monster/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5
+        //http://developer.wordnik.com/word.json/monster/definitions?limit=200&includeRelated=true&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5
+        @GET("v4/word.json/{word}/definitions")
+        Call<List<WordnikDefinition>> fetchDefinition(@Path("word") String word, @Query("api_key") String apiKey, @Query("limit") int limit, @Query("includeRelated") Boolean includeRelated, @Query("includeTags") Boolean includeTags);
     }
 
     public class WordnikDefinition {
