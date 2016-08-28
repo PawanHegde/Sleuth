@@ -16,8 +16,6 @@ import com.storykaar.sleuth.model.Result;
 import com.storykaar.sleuth.ui.views.ExpandableCardView;
 import com.storykaar.sleuth.ui.views.LabeledTextView;
 
-import java.util.HashMap;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -97,46 +95,5 @@ public class ShowResultViewHolder
             card.toggleState();
             Toast.makeText(view.getContext(), "Card Touched", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    protected String getTextRepresentation(final Result result) {
-        HashMap<String, Object> properties = result.propertyMap;
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(properties.get("Language"));
-        builder.append("\t");
-        builder.append(properties.get("Genre"));
-        builder.append("\t");
-        builder.append(properties.get("Country"));
-        builder.append("<br/>");
-
-        builder.append(properties.get("Plot"));
-        builder.append("<br/>");
-
-        builder.append("<b>Actors:</b>");
-        builder.append(properties.get("Actors"));
-        builder.append("<br/>");
-
-        builder.append("<b>Director:</b>");
-        builder.append(properties.get("Director"));
-        builder.append("<br/>");
-
-        builder.append("<b>IMDb Rating:</b>");
-        builder.append(properties.get("imdbRating"));
-        builder.append("\t");
-        builder.append("<b>Metascore:</b>");
-        builder.append(properties.get("Metascore"));
-        builder.append("<br/>");
-
-        builder.append("<b>Rated:</b>");
-        builder.append(properties.get("Rated"));
-        builder.append("<br/>");
-
-        builder.append("<b>Writer(s):</b>");
-        builder.append(properties.get("Writer"));
-        builder.append("<br/>");
-
-        return builder.toString();
     }
 }
