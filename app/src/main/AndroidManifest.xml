@@ -53,15 +53,24 @@
 
         <!-- Implement the input activity for widget -->
         <activity android:name=".ui.activities.InputActivity" />
+
         <activity
             android:name=".ui.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".ui.activities.SleuthActivity">
+            android:parentActivityName=".ui.activities.SleuthActivity"
+            android:theme="@style/AppActionBarTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.storykaar.sleuth.ui.activities.SleuthActivity" />
         </activity>
-        <activity android:name=".ui.activities.AboutActivity"/>
+        <activity
+            android:name=".ui.activities.AboutActivity"
+            android:parentActivityName=".ui.activities.SleuthActivity"
+            android:theme="@style/AppActionBarTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.storykaar.sleuth.ui.activities.SleuthActivity" />
+        </activity>
     </application>
 
 </manifest>
