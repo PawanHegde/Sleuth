@@ -32,28 +32,8 @@ public class SleuthApp extends Application {
 
     private static JobManager jobManager;
 
-    @Override
-    public void onCreate() {
-        System.out.println("APPCREATESTARTED");
-        super.onCreate();
-
-        instance = this;
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        } else {
-            Timber.plant(Timber.tag("Sleuthag"));
-        }
-
-        System.out.println("APPCREATEFINISHED");
-
-        ResultStore.getResultStore().vacuum();
-        SleuthApp.configureJobManager(instance);
-    }
-
     private static void configureJobManager(@NonNull Context context) {
         Configuration.Builder builder = new Configuration.Builder(context)
-                .scheduler(GcmJobSchedulerService.createSchedulerFor(context, JobService.class), false)
                 .minConsumerCount(1)//always keep at least one consumer alive
                 .maxConsumerCount(3)//up to 3 consumers at a time
                 .loadFactor(1)//3 jobs per consumer
@@ -93,5 +73,24 @@ public class SleuthApp extends Application {
             configureJobManager(instance);
         }
         return jobManager;
+    }
+
+    @Override
+    public void onCreate() {
+        System.out.println("APPCREATESTARTED");
+        super.onCreate();
+
+        instance = this;
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        } else {
+            Timber.plant(Timber.tag("Sleuthag"));
+        }
+
+        System.out.println("APPCREATEFINISHED");
+
+        ResultStore.getResultStore().vacuum();
+        SleuthApp.configureJobManager(instance);
     }
 }
