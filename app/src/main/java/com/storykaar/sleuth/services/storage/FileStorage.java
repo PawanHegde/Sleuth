@@ -35,6 +35,8 @@ import timber.log.Timber;
 
 /**
  * Created by pawan on 4/6/16.
+ *
+ * Concrete implementation used for storage to files directly (as opposed to the database)
  */
 public class FileStorage {
 
@@ -80,6 +82,10 @@ public class FileStorage {
             }
         } catch (IOException e) {
             Timber.e("Failed to read the curiosities file! This is embarrassing");
+        } finally {
+            if (curiosities == null) {
+                curiosities = new HashMap<>();
+            }
         }
 
         return curiosities;
@@ -109,7 +115,7 @@ public class FileStorage {
             return new HashSet<>(0);
         }
 
-        Set<ResultGroup> resultGroupSet = new HashSet<ResultGroup>();
+        Set<ResultGroup> resultGroupSet = new HashSet<>();
         File[] files = folder.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File file, String s) {
@@ -117,8 +123,8 @@ public class FileStorage {
             }
         });
 
-        for (int i = 0; i < files.length; i++) {
-            ResultGroup resultGroup = gson.fromJson(FileUtil.byteArrayToString(FileUtil.readFromStream(files[i])), ResultGroup.class);
+        for (File file: files) {
+            ResultGroup resultGroup = gson.fromJson(FileUtil.byteArrayToString(FileUtil.readFromStream(file)), ResultGroup.class);
             resultGroupSet.add(resultGroup);
         }
 
