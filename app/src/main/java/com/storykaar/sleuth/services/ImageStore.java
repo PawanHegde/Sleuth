@@ -5,6 +5,7 @@
 package com.storykaar.sleuth.services;
 
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.storykaar.sleuth.events.ImageFetchedMessage;
@@ -19,6 +20,8 @@ import timber.log.Timber;
 
 /**
  * Created by pawan on 17/4/16.
+ *
+ * The centralised way to access all the images downloaded by this app
  */
 public class ImageStore {
     private static ImageStore instance;
@@ -31,6 +34,7 @@ public class ImageStore {
                 if (instance == null) {
                     Timber.d("Instance of ImageStore created");
                     instance = new ImageStore();
+                    EventBus.getDefault().register(instance);
                 }
             }
         }
@@ -38,29 +42,40 @@ public class ImageStore {
         return instance;
     }
 
-    public void requestImage(final @NonNull String url) {
-        String key = Integer.toHexString(url.hashCode());
+    public void requestImage(@NonNull final String url) {
+        if (!url.isEmpty()) {
+            final String key = Integer.toHexString(url.hashCode());
 
-        if (cacheMap.containsKey(key)) {
-            Timber.v("Found a mention of %s in cache", url);
-            EventBus.getDefault().post(new ImageFetchedMessage(url, cacheMap.get(key)));
-        } else {
-            StorageController.requestImage(url);
+            if (cacheMap.containsKey(key)) {
+                Timber.v("Found a mention of %s in cache", url);
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Boolean hasImage = cacheMap.get(key) != null;
+                        EventBus.getDefault().post(new ImageFetchedMessage(url, cacheMap.get(key), hasImage));
+                    }
+                });
+            } else {
+                StorageController.requestImage(url);
+            }
         }
     }
 
     @Subscribe
-    public void onImageRetrieved(final ImageFetchedMessage message) {
-        if (message == null) {
-            fetchImage(message.url);
-        }
+    public void onImageRetrieved(@NonNull StorageController.ImageFetchedMessage message) {
+        /* Image here could be *null*. We don't care
+        ** We simply store the null value in the cache so that the next time we get queried,
+        ** we can simply tell them that the image does not exist (in the requestImage function)
+        ** Instead of trying to fetch it again from the storage or even worse, the internet.
+         */
+        cacheMap.put(Integer.toHexString(message.url.hashCode()), message.image);
+        Timber.d("Cached the image from %s in storage to cache", message.url);
     }
 
-    private void fetchImage(final @NonNull String url) {
+    public void storeImage(@NonNull String url, @NonNull Bitmap image) {
+        cacheMap.put(Integer.toHexString(url.hashCode()), image);
+        Timber.d("Cached the image from %s to cache", url);
 
-    }
-
-    public void storeImage(final @NonNull String url) {
-
+        StorageController.requestSaveImage(url, image);
     }
 }

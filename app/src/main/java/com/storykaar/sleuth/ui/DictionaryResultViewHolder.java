@@ -4,6 +4,7 @@
 
 package com.storykaar.sleuth.ui;
 
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ public class DictionaryResultViewHolder
     }
 
     @Override
-    public void setResult(final Result result) {
+    public void setResult(@NonNull final Result result) {
         String word = (String) result.propertyMap.get(Constants.WORDNIK_WORD);
         wordView.setText(word);
 

@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.storykaar.sleuth.events.CuriositiesFetchedMessage;
-import com.storykaar.sleuth.events.ImageFetchedMessage;
 import com.storykaar.sleuth.model.Curiosity;
 import com.storykaar.sleuth.model.ResultGroup;
 import com.storykaar.sleuth.model.sources.Source;
@@ -123,7 +122,7 @@ public class StorageController {
         });
     }
 
-    public static void requestImage(final @NonNull String url) {
+    public static void requestImage(@NonNull final String url) {
         Timber.i("Requesting image for url %s ", url);
 
         AsyncTask.execute(new Runnable() {
@@ -133,10 +132,28 @@ public class StorageController {
                 try {
                     image = storage.requestImage(url);
                 } catch (IOException e) {
-                    Timber.e("Failed to retrieve the image from storage. This is a really bad failure");
+                    Timber.e("Failed to retrieve the image from storage. This is a really bad failure: %s", e);
                 }
+
+                Boolean hasImage = image != null;
+                Timber.d("Storage has the image %s [%s]", image, hasImage);
                 // Image could be null. Deal with it.
-                EventBus.getDefault().post(new ImageFetchedMessage(url, image));
+                EventBus.getDefault().post(new ImageFetchedMessage(url, image, hasImage));
+            }
+        });
+    }
+
+    public static void requestSaveImage(final @NonNull String url, final @NonNull Bitmap image) {
+        Timber.i("Requesting save of image for url %s ", url);
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    storage.requestSaveImage(url, image);
+                } catch (IOException e) {
+                    Timber.e("Failed to save the image to storage. This is a really bad failure: %s", e);
+                }
             }
         });
     }
@@ -207,6 +224,18 @@ public class StorageController {
             this.curiosity = curiosity;
             this.resultGroupSet = resultGroupSet;
             this.requestedSources = requestedSources;
+        }
+    }
+
+    public static class ImageFetchedMessage {
+        final public String url;
+        final public Bitmap image;
+        final public Boolean hasImage;
+
+        public ImageFetchedMessage(String url, Bitmap image, Boolean hasImage) {
+            this.url = url;
+            this.image = image;
+            this.hasImage = hasImage;
         }
     }
 }

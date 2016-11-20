@@ -8,7 +8,6 @@ import com.storykaar.sleuth.model.Curiosity;
 import com.storykaar.sleuth.model.Result;
 import com.storykaar.sleuth.model.ResultGroup;
 import com.storykaar.sleuth.model.sources.Source;
-import com.storykaar.sleuth.services.ImageStore;
 import com.storykaar.sleuth.util.ServiceGenerator;
 
 import java.io.IOException;
@@ -42,10 +41,6 @@ public class OmdbDownloader implements DownloaderFactory.IDownloader {
         if ("False".equals(omdbObject.Response)) {
             // We did not obtain any result
             return new ResultGroup(curiosity, Source.omdbSource, new HashSet<Result>(0));
-        }
-
-        if (omdbObject.Poster != null) {
-            ImageStore.getInstance().storeImage(omdbObject.Poster);
         }
 
         HashMap<String, Object> propertiesMap = new HashMap<>();

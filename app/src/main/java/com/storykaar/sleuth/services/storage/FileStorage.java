@@ -158,12 +158,31 @@ public class FileStorage {
         FileUtil.deleteFileRecursively(folder);
     }
 
-    public synchronized Bitmap requestImage(final @NonNull String url) throws IOException {
+    public synchronized Bitmap requestImage(@NonNull String url) throws IOException {
         String fileName = Integer.toHexString(url.hashCode());
 
-        File imageFile = new File(SleuthApp.getAppContext().getFilesDir() + IMAGE_FOLDER, fileName);
+        File imageFile = new File(SleuthApp.getAppContext().getFilesDir() + "/" + IMAGE_FOLDER, fileName);
 
         return FileUtil.byteArrayToBitmap(FileUtil.readFromStream(imageFile));
+    }
+
+    public synchronized void requestSaveImage(@NonNull String url, @NonNull Bitmap bitmap) throws IOException {
+        String fileName = Integer.toHexString(url.hashCode());
+
+        File imageFolder = new File(SleuthApp.getAppContext().getFilesDir() + "/" + IMAGE_FOLDER);
+        if (!imageFolder.exists()) {
+            imageFolder.mkdirs();
+        }
+
+        File imageFile = new File(SleuthApp.getAppContext().getFilesDir() + "/" + IMAGE_FOLDER, fileName);
+
+        if (!imageFile.exists()) {
+            if (!imageFile.createNewFile()) {
+                throw new IOException("Failed to create a file to store the image from %s" + url);
+            }
+        }
+
+        FileUtil.writeToFile(imageFile, bitmap);
     }
 
     public synchronized void saveSourcesForCuriosity(final @NonNull Curiosity curiosity, final @NonNull Set<Source> requestedSources) throws IOException {
@@ -211,6 +230,8 @@ public class FileStorage {
         for (Curiosity curiosity: curiosityIntegerMap.keySet()) {
             validFolderNames.add(getCuriosityCode(curiosity));
         }
+
+        validFolderNames.add(IMAGE_FOLDER);
 
         Timber.d("Valid folder names are: %s", validFolderNames);
 

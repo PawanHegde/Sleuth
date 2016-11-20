@@ -4,21 +4,29 @@
 
 package com.storykaar.sleuth.ui.viewholders;
 
+import android.support.annotation.NonNull;
 import android.support.percent.PercentRelativeLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.storykaar.sleuth.R;
+import com.storykaar.sleuth.events.ImageFetchedMessage;
 import com.storykaar.sleuth.model.Result;
+import com.storykaar.sleuth.services.ImageStore;
 import com.storykaar.sleuth.ui.views.ExpandableCardView;
 import com.storykaar.sleuth.ui.views.LabeledTextView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 /**
  * Created by pawan on 9/7/16.
@@ -49,14 +57,22 @@ public class ShowResultViewHolder
 
     String sourceURL;
 
+    Result result;
+
     public ShowResultViewHolder(final View view) {
         super(view);
 
         ButterKnife.bind(this, view);
+
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
-    public void setResult(final Result result) {
+    public void setResult(@NonNull final Result result) {
+        this.result = result;
+
         titleView.setText(String.valueOf(result.propertyMap.get("Title")));
         plotView.setValue(String.valueOf(result.propertyMap.get("Plot")));
         actorsView.setValue(String.valueOf(result.propertyMap.get("Actors")));
@@ -73,9 +89,11 @@ public class ShowResultViewHolder
 //            imageMatrix.setScale(finalWidth, finalHeight);
 
 //            imageView.setImageMatrix(imageMatrix);
-            Glide.with(imageView.getContext())
-                    .load(result.image)
-                    .into(imageView);
+//            Glide.with(imageView.getContext())
+//                    .load(result.image)
+//                    .into(imageView);
+            imageView.setVisibility(View.VISIBLE);
+            ImageStore.getInstance().requestImage(this.result.image);
         } else {
             imageView.setVisibility(View.GONE);
             imageView.bringToFront();
@@ -94,6 +112,18 @@ public class ShowResultViewHolder
         } else {
             card.toggleState();
             Toast.makeText(view.getContext(), "Card Touched", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Subscribe
+    public void onImageFetched(ImageFetchedMessage message) {
+        Timber.d("Has Image [%s] and image Received %s. Was expecting %s", message.hasImage, message.url, result.image);
+        if (message.hasImage && Objects.equals(result.image, message.url)) {
+            Timber.d("Correct Image Received");
+            imageView.setImageBitmap(message.image);
+            imageView.setAdjustViewBounds(true);
+        } else {
+            Timber.d("Expected image %s but got %s", result.image, message.url);
         }
     }
 }

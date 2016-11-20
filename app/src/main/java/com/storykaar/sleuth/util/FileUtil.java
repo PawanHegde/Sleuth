@@ -10,10 +10,13 @@ import android.graphics.BitmapFactory;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+
+import timber.log.Timber;
 
 
 /**
@@ -21,6 +24,10 @@ import java.io.UnsupportedEncodingException;
  */
 public class FileUtil {
     public static byte[] readFromStream(final File file) throws IOException {
+        if (!file.exists()) {
+            Timber.e("File %s does not exist", file);
+        }
+
         InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
 
         int size = inputStream.available();
@@ -54,6 +61,19 @@ public class FileUtil {
         writer.write(text);
 
         writer.close();
+    }
+
+    public static void writeToFile(final File file, final Bitmap image) throws IOException {
+        if (file.exists()) {
+            file.delete();
+        }
+
+        FileOutputStream outputStream = new FileOutputStream(file);
+        image.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        outputStream.flush();
+        outputStream.close();
+
+        Timber.d("Saved to outputStream: %s of file %s", outputStream, file.exists());
     }
 
     public static boolean deleteFileRecursively(File rootFile) {

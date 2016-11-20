@@ -17,6 +17,7 @@ import com.storykaar.sleuth.SleuthApp;
 import com.storykaar.sleuth.model.Curiosity;
 import com.storykaar.sleuth.model.ResultGroup;
 import com.storykaar.sleuth.model.sources.Source;
+import com.storykaar.sleuth.services.ImageStore;
 import com.storykaar.sleuth.services.ResultStore;
 
 import java.util.HashSet;
@@ -69,6 +70,23 @@ public class DownloadManager {
 
         Timber.d("Managing finished");
         return requestedSources;
+    }
+
+    public static void manage(@NonNull Curiosity curiosity, @NonNull String url) {
+        JobManager jobManager = SleuthApp.getJobManager();
+
+        String downloadMode = PreferenceManager.getDefaultSharedPreferences(SleuthApp.getAppContext())
+                .getString("mobile_data_use", "wifi");
+
+        Boolean wifiOnly = downloadMode.equals("wifi") || downloadMode.equals("balanced");
+
+        Params params = new Params(1)
+                .setRequiresNetwork(true)
+                .setRequiresUnmeteredNetwork(wifiOnly)
+                .addTags(curiosity.toString());
+
+        Job job = new ImageDownloadJob(params, curiosity, url);
+        jobManager.addJobInBackground(job);
     }
 
     public static void cancel(@NonNull final Curiosity curiosity) {
@@ -133,6 +151,42 @@ public class DownloadManager {
 
             Timber.i("Downloading completed for %s", job);
             ResultStore.getResultStore().addResults(results);
+        }
+    }
+
+    public static class ImageJobCallbackHandler extends JobManagerCallbackAdapter {
+        @Override
+        public void onJobAdded(Job job) {
+            Timber.v("Job %s added to the queue with handler %s", job, this);
+        }
+
+        @Override
+        public void onJobRun(Job job, int resultCode) {
+            Timber.v("Ran job %s with result %s", job, resultCode);
+        }
+
+        @Override
+        public void onJobCancelled(Job job, boolean byCancelRequest) {
+            Timber.v("Job %s has been cancelled. Whether it was by request is %s.", job, byCancelRequest);
+        }
+
+        @Override
+        public void onDone(@NonNull Job genericJob) {
+
+            if (!(genericJob instanceof ImageDownloadJob)) {
+                Timber.w("ResultStore got a callback for a non-ImageDownloadJob job");
+                return;
+            }
+
+            ImageDownloadJob job = (ImageDownloadJob) genericJob;
+
+            if (job.isCancelled()) {
+                Timber.w("Job %s got cancelled", job);
+                return;
+            }
+
+            Timber.i("Downloading completed for %s. We have %s", job, job.getImage());
+            ImageStore.getInstance().storeImage(job.getUrl(), job.getImage());
         }
     }
 }

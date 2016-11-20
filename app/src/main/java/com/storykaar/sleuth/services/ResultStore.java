@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.storykaar.sleuth.events.ResultsFetchedMessage;
 import com.storykaar.sleuth.model.Curiosity;
+import com.storykaar.sleuth.model.Result;
 import com.storykaar.sleuth.model.ResultGroup;
 import com.storykaar.sleuth.model.sources.Source;
 import com.storykaar.sleuth.services.downloaders.DownloadManager;
@@ -125,6 +126,15 @@ public class ResultStore {
         cacheResults(curiosity, results);
 
         Set<ResultGroup> resultGroups = resultMap.get(curiosity);
+
+        // Once we have the results, get the images for the said results
+        for (ResultGroup resultGroup : resultGroups) {
+            for (Result result : resultGroup.getResults()) {
+                if (result.image != null && !result.image.isEmpty()) {
+                    DownloadManager.manage(curiosity, result.image);
+                }
+            }
+        }
 
         Set<Source> availableSources;
         if (resultGroups != null) {

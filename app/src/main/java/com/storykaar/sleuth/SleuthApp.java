@@ -54,6 +54,7 @@ public class SleuthApp extends Application {
         jobManager = new JobManager(builder.build());
 
         jobManager.addCallback(new DownloadManager.CallBackHandler());
+        jobManager.addCallback(new DownloadManager.ImageJobCallbackHandler());
     }
 
     public static Context getAppContext() {
